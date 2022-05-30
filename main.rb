@@ -8,8 +8,6 @@ sampleOutput = HTTParty.get(sampleOutputURL)
 #We retrieve the required columns list from the sample output. 
 #We could define the columns differently
 $columns = sampleOutput.split('0')[0].gsub("\n","").split(",")
-
-
 # Converts a json object to a csv string
 #
 # @param [String, #read] the json object
@@ -19,7 +17,8 @@ def json_to_csv(json)
 	csv_string = CSV.generate do |csv|
 	  csv << $columns
 	end
-
+	
+	
 	#Then we flatten each row and turn it into a csv string as well
 	json.each do |r|
 		#tags gets a special treatment first du to the inconsistent size
@@ -60,24 +59,3 @@ end
 def write_csv_to_file(csv_string, outputFilename)
 	File.open(outputFilename, "w") { |f| f.write csv_string}
 end
-
-#sourceURL = "https://gist.githubusercontent.com/romsssss/6b8bc16cfd015e2587ef6b4c5ee0f232/raw/f74728a6ac05875dafb882ae1ec1deaae4d0ed4b/users.json"
-#l = json_file_to_csv(sourceURL)
-#write_csv_to_file(l,"output.csv")
-#
-#puts l
-#
-
-# File:  tc_simple_number.rb
-
-#require_relative "simple_number"
-#require "test/unit"
-# 
-#class TestSimpleNumber < Test::Unit::TestCase
-# 
-#  def test_simple
-#    assert_equal(4,4 )
-##    assert_equal(4,5 )
-#  end
-# 
-#end
