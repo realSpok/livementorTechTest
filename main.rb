@@ -28,10 +28,10 @@ def json_converter(json, formatter)
 	return csv_string
 end
 
-# Converts a json file to a csv string
+# csv formatter, to be plugged in the json converted
 #
-# @param [String, #read] the json file http url
-# @return [String] the csv string (with line breaks)
+# @param [String, #read] the list
+# @return [String] the corresponding csv
 def csv_formatter(l)
 	csv_string = CSV.generate do |csv|
 		csv << l
