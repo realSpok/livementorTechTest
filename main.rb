@@ -2,22 +2,16 @@ require 'httparty'
 require 'csv'
 require_relative 'flatten'
 
-sampleOutputURL="https://gist.githubusercontent.com/romsssss/2efc2ace305b98be85d0fe617a10ac8b/raw/a43cffb5dc2170294e9635207f18bacba2b68001/users.csv"
-sampleOutput = HTTParty.get(sampleOutputURL)
+#Retrieving the needed columns from the config file
+$columns = File.open("columns.config", "r").read().gsub("\n","").split(",")
 
-#We retrieve the required columns list from the sample output. 
-#We could define the columns differently
-$columns = sampleOutput.split('0')[0].gsub("\n","").split(",")
 # Converts a json object to a csv string
 #
 # @param [String, #read] the json object
 # @return [String] the csv string (with line breaks)
-def json_to_csv(json)
+def json_converter(json, formatter)
 	#And turn them into a CSV string
-	csv_string = CSV.generate do |csv|
-	  csv << $columns
-	end
-	
+	csv_string = method(formatter).call($columns)
 	
 	#Then we flatten each row and turn it into a csv string as well
 	json.each do |r|
@@ -29,13 +23,21 @@ def json_to_csv(json)
 		flattened = r.flatten_with_path()
 
 		l =	$columns.map { |col|  flattened[col] } 
-		csv_string += CSV.generate do |csv|
-		  csv << l
-		end
+		csv_string += method(formatter).call(l)
 	end
 	return csv_string
 end
 
+# Converts a json file to a csv string
+#
+# @param [String, #read] the json file http url
+# @return [String] the csv string (with line breaks)
+def csv_formatter(l)
+	csv_string = CSV.generate do |csv|
+		csv << l
+	end
+	return csv_string
+end
 
 # Converts a json file to a csv string
 #
@@ -48,7 +50,7 @@ def json_file_to_csv(file_url)
 	response = HTTParty.get(file_url)
 	b = response.body
 	json =JSON.parse(response.body)
-	return json_to_csv(json) 
+	return json_converter(json,:csv_formatter) 
 end
 
 

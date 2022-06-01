@@ -1,8 +1,12 @@
 module Enumerable
-#source https://stackoverflow.com/questions/10712679/flatten-a-nested-json-object
-  def flatten_with_path(parent_prefix = nil)
-    res = {}
 
+  #source https://stackoverflow.com/questions/10712679/flatten-a-nested-json-object
+  # flatten the Enumerable if it contains nested objects, keeping the nested keys as a concatenated path
+  #
+  # @return [String] the flatened Enumerable
+  def flatten_with_path(parent_prefix = nil)
+
+    res = {}
     self.each_with_index do |elem, i|
       if elem.is_a?(Array)
         k, v = elem

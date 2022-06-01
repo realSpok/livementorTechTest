@@ -40,11 +40,10 @@ class TestSimpleNumber < Test::Unit::TestCase
   }
 ]'
   
-  	  csv_string = json_to_csv(JSON.parse(json_string)).to_str.force_encoding("utf-8")
+  	  csv_string = json_converter(JSON.parse(json_string),:csv_formatter).to_str.force_encoding("utf-8")
 	  expected_csv_string = 'id,email,tags,profiles.facebook.id,profiles.facebook.picture,profiles.twitter.id,profiles.twitter.picture
 12,nicolas@quintity.com,"consectetur,test,plane,test,quis",12,//fbcdn.com/abc.123.jpg,12,//twcdn.com/ad9e8cd3-.jpg
 '.to_str.force_encoding("utf-8")
-	  puts csv_string
     assert_equal(csv_string, expected_csv_string)
 
   end
